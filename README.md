@@ -149,3 +149,7 @@ Set an environment variable named `OPENAI_API_KEY`. If no key exists, the app re
 If you want a short line for your profile or pinned repository, use:
 
 > Middleware-based AI security project that detects prompt injection, jailbreaks, and suspicious LLM prompts using Flask, SQLite, and machine learning.
+
+## LinkedIn-Ready Summary
+
+Built an Adversarial Prompt Injection Detector for LLM applications using Flask, SQLite, and scikit-learn. The project acts as a security middleware layer that scans prompts for jailbreaks, instruction override attacks, and obfuscated prompt injection attempts using keyword matching, regex patterns, and a TF-IDF + Logistic Regression model. High-risk prompts are blocked before they reach the model, while safe prompts can be forwarded to an AI API or a mock response. The project also includes logging, a risk dashboard, and a professional cybersecurity UI.
