@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Prompt Shield</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="cyber-body">
+    <nav class="navbar navbar-expand-lg navbar-dark cyber-nav border-bottom border-secondary-subtle">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">Prompt Shield</a>
+            <div class="navbar-nav ms-auto gap-2">
+                <a class="nav-link" href="{{ url_for('index') }}">Scanner</a>
+                <a class="nav-link active" href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a class="nav-link" href="{{ url_for('logs') }}">Logs</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-5">
+        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
+            <div>
+                <span class="eyebrow">Security Overview</span>
+                <h1 class="display-6 fw-bold mt-2 mb-0">Detection dashboard</h1>
+            </div>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-info">Back to Scanner</a>
+        </div>
+
+        <section class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <span>Total scanned</span>
+                    <strong>{{ stats.total_prompts }}</strong>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <span>Blocked prompts</span>
+                    <strong class="text-danger">{{ stats.blocked_prompts }}</strong>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <span>Safe prompts</span>
+                    <strong class="text-success">{{ stats.safe_prompts }}</strong>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <span>Review queue</span>
+                    <strong class="text-warning">{{ stats.review_prompts }}</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="row g-4">
+            <div class="col-lg-5">
+                <div class="glass-card h-100">
+                    <div class="card-header-ghost mb-3">
+                        <h2 class="h4 mb-1">Risk Distribution</h2>
+                        <p class="text-secondary mb-0">Chart.js visualization of safe, medium, and high risk prompts.</p>
+                    </div>
+                    <div class="chart-wrap">
+                        <canvas id="riskChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="glass-card h-100">
+                    <div class="card-header-ghost mb-3">
+                        <h2 class="h4 mb-1">Recent Attack Logs</h2>
+                        <p class="text-secondary mb-0">The latest scans captured by the SQLite audit log.</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle mb-0 cyber-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Prompt</th>
+                                    <th>Decision</th>
+                                    <th>Risk</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in recent_logs %}
+                                    <tr>
+                                        <td>{{ row.timestamp }}</td>
+                                        <td>{{ row.prompt[:80] }}{% if row.prompt|length > 80 %}...{% endif %}</td>
+                                        <td><span class="badge {{ 'text-bg-danger' if row.prediction == 'Blocked' else 'text-bg-success' if row.prediction == 'Allowed' else 'text-bg-warning' }}">{{ row.prediction }}</span></td>
+                                        <td>{{ row.risk_score }}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center text-secondary py-4">No scans yet.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        window.riskDistribution = {{ risk_distribution | safe }};
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
