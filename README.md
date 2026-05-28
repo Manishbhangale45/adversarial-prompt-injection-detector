@@ -143,9 +143,3 @@ Set an environment variable named `OPENAI_API_KEY`. If no key exists, the app re
 - Combines Flask, SQLite, and machine learning in one app
 - Demonstrates defensive engineering and prompt safety awareness
 - Looks complete and easy for recruiters to understand
-
-## Suggested GitHub Caption
-
-If you want a short line for your profile or pinned repository, use:
-
-> Middleware-based AI security project that detects prompt injection, jailbreaks, and suspicious LLM prompts using Flask, SQLite, and machine learning.
